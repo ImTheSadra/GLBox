@@ -17,11 +17,10 @@
 
 namespace Pengine::GL {
 
-    #ifdef _X11
-    #define PFN_OF(x) PFN##x
-    #endif
     #ifdef _WIN32
     #define PFN_OF(x) PFN##x##PROC
+    #else
+    #define PFN_OF(x) PFN##x
     #endif
 
     #ifndef APIENTRYP
@@ -161,8 +160,6 @@ namespace Pengine::GL {
 
 #ifdef _WIN32
 #define GLoad(name) wglGetProcAddress(name) 
-#endif
-
-#ifdef _X11
+#else
 #define GLoad(name) glXGetProcAddress((const GLubyte*)name)
 #endif
