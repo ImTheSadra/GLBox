@@ -4,9 +4,9 @@
 It defines function pointers for all core OpenGL functions (up to the version you target) and common extensions, then loads them at runtime using the platform’s native API.
 
 - **Windows** – uses `wglGetProcAddress`
-- **X11 (Linux, BSD, etc.)** – uses `glXGetProcAddress`
+- **Unix** – uses `glXGetProcAddress` (only tested on ubuntu linux)
 
-The loader separates declaration (`Pengine/GL.h`) from implementation – you provide the function pointer definitions and implement `LoadExtensions()`.
+The loader separates declaration (`glbox.h`) from implementation – you provide the function pointer definitions and implement `LoadExtensions()`.
 
 ---
 
@@ -25,10 +25,10 @@ The loader separates declaration (`Pengine/GL.h`) from implementation – you pr
 
 ## Supported Platforms
 
-| Platform | Macro | GL function loader      |
-|----------|-------|--------------------------|
-| Windows  | `_WIN32` | `wglGetProcAddress`     |
-| X11      | `_X11`   | `glXGetProcAddress`     |
+| Platform | GL function loader      |
+|----------|-------------------------|
+| Windows  | `wglGetProcAddress`     |
+| Linux    | `glXGetProcAddress`     |
 
 > ⚠️ The loader does **not** create an OpenGL context. You must create a valid context before calling `Pengine::GL::LoadExtensions()`!.
 
