@@ -1,36 +1,8 @@
 #pragma once
-#ifndef GLX_GLXEXT_PROTOTYPES
-#define GLX_GLXEXT_PROTOTYPES
-#endif
-#include <GL/gl.h>
-
-#ifdef _X11
-#include <GL/glx.h>
-#endif
-
-#ifdef _WIN32
-#include <windows.h>
-#include <tchar.h>
-#include <GL/wglext.h>
-#include <GL/glext.h>
-#endif
+#include "glbox_head.h"
+#include "uniforms.h"
 
 namespace Pengine::GL {
-
-    #ifdef _WIN32
-    #define PFN_OF(x) PFN##x##PROC
-    #else
-    #define PFN_OF(x) PFN##x
-    #endif
-
-    #ifndef APIENTRYP
-    #define APIENTRYP APIENTRY *
-    #endif
-
-    #ifndef GLchar
-    typedef char GLchar;
-    #endif
-
     typedef GLuint (APIENTRYP PFN_OF(GLCREATESHADER))(GLenum shaderType);
     typedef void (APIENTRYP PFN_OF(GLSHADERSOURCE))(GLuint shader, GLsizei count, const GLchar* const* string, const GLint* length);
     typedef void (APIENTRYP PFN_OF(GLCOMPILESHADER))(GLuint shader);
@@ -80,11 +52,6 @@ namespace Pengine::GL {
     typedef void (APIENTRYP PFN_OF(GLBINDRENDERBUFFER))(GLenum target, GLuint buffer);
     typedef void (APIENTRYP PFN_OF(GLRENDERBUFFERSTORAGE))(GLenum target, GLenum inFormat, GLsizei width, GLsizei height);
     typedef void (APIENTRYP PFN_OF(GLDELETERENDERBUFFERS))(GLsizei n, const GLuint* textures);
-
-    typedef GLuint (APIENTRYP PFN_OF(GLGETUNIFORMBLOCKINDEX))(GLuint program, const GLchar *uniformBlockName);
-    typedef GLuint (APIENTRYP PFN_OF(GLGETACTIVEUNIFORMBLOCK))(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint *params);
-    typedef void (APIENTRYP PFN_OF(GLGETUNIFORMLOCATION))(GLuint program, const GLchar *name);
-    typedef void (APIENTRYP PFN_OF(GLUNIFORMBLOCKBINDING))(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
 
     typedef void (APIENTRYP PFN_OF(GLGETINTEGERV))(GLenum what, GLuint* data);
 
@@ -143,11 +110,6 @@ namespace Pengine::GL {
     extern PFN_OF(GLRENDERBUFFERSTORAGE) RenderBufferStorage;
     extern PFN_OF(GLDELETERENDERBUFFERS) DeleteRenderBuffers;
 
-    extern PFN_OF(GLGETUNIFORMBLOCKINDEX) GetUniformBlockIndex;
-    extern PFN_OF(GLGETACTIVEUNIFORMBLOCK) GetActiveUniformBlock;
-    extern PFN_OF(GLGETUNIFORMLOCATION) GetUnifromLocation;
-    extern PFN_OF(GLUNIFORMBLOCKBINDING) UniformBlockBinding;
-
     extern PFN_OF(GLGETINTEGERV) GetIntegerv;
     extern bool loaded;
 
@@ -157,9 +119,3 @@ namespace Pengine::GL {
     
     void LoadExtensions();
 }
-
-#ifdef _WIN32
-#define GLoad(name) wglGetProcAddress(name) 
-#else
-#define GLoad(name) glXGetProcAddress((const GLubyte*)name)
-#endif

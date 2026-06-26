@@ -57,6 +57,20 @@ namespace Pengine::GL {
     PFN_OF(GLGETUNIFORMLOCATION) GetUnifromLocation = nullptr;
     PFN_OF(GLUNIFORMBLOCKBINDING) UniformBlockBinding = nullptr;
 
+    PFN_OF(GLUNIFORM1F) Uniform1f = nullptr;
+    PFN_OF(GLUNIFORM2F) Uniform2f = nullptr;
+    PFN_OF(GLUNIFORM3F) Uniform3f = nullptr;
+    PFN_OF(GLUNIFORM4F) Uniform4f = nullptr;
+
+    PFN_OF(GLUNIFORM1I) Uniform1i = nullptr;
+    PFN_OF(GLUNIFORM2I) Uniform2i = nullptr;
+    PFN_OF(GLUNIFORM3I) Uniform3i = nullptr;
+    PFN_OF(GLUNIFORM4I) Uniform4i = nullptr;
+
+    PFN_OF(GLUNIFORMMATRIX2FV) UniformMatrix2fv = nullptr;
+    PFN_OF(GLUNIFORMMATRIX3FV) UniformMatrix3fv = nullptr;
+    PFN_OF(GLUNIFORMMATRIX4FV) UniformMatrix4fv = nullptr;
+
     PFN_OF(GLGETINTEGERV) GetIntegerv = nullptr;
 
     bool loaded = false;
@@ -121,6 +135,20 @@ namespace Pengine::GL {
         GetActiveUniformBlock       = (PFN_OF(GLGETACTIVEUNIFORMBLOCK))     GLoad("glGetActiveUniformBlockiv");
         GetUnifromLocation          = (PFN_OF(GLGETUNIFORMLOCATION))        GLoad("glGetUniformLocation");
         UniformBlockBinding         = (PFN_OF(GLUNIFORMBLOCKBINDING))       GLoad("glUniformBlockBinding");
+
+        Uniform1f                   = (PFN_OF(GLUNIFORM1F))                 GLoad("glUniform1f");
+        Uniform2f                   = (PFN_OF(GLUNIFORM2F))                 GLoad("glUniform2f");
+        Uniform3f                   = (PFN_OF(GLUNIFORM3F))                 GLoad("glUniform3f");
+        Uniform4f                   = (PFN_OF(GLUNIFORM4F))                 GLoad("glUniform4f");
+
+        Uniform1i                   = (PFN_OF(GLUNIFORM1I))                 GLoad("glUniform1i");
+        Uniform2i                   = (PFN_OF(GLUNIFORM2I))                 GLoad("glUniform2i");
+        Uniform3i                   = (PFN_OF(GLUNIFORM3I))                 GLoad("glUniform3i");
+        Uniform4i                   = (PFN_OF(GLUNIFORM4I))                 GLoad("glUniform4i");
+
+        UniformMatrix2fv            = (PFN_OF(GLUNIFORMMATRIX2FV))          GLoad("glUniformMatrix2fv");
+        UniformMatrix3fv            = (PFN_OF(GLUNIFORMMATRIX3FV))          GLoad("glUniformMatrix3fv");
+        UniformMatrix4fv            = (PFN_OF(GLUNIFORMMATRIX4FV))          GLoad("glUniformMatrix4fv");
 
         GetIntegerv                 = (PFN_OF(GLGETINTEGERV))               GLoad("glGetIntegerv");
 
