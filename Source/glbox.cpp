@@ -120,11 +120,13 @@ namespace Pengine::GL {
         CheckFrameBufferStatus      = (PFN_OF(GLCHECKFRAMEBUFFERSTATUS))    GLoad("glCheckFramebufferStatus");
         DeleteFrameBuffers          = (PFN_OF(GLDELETEFRAMEBUFFERS))        GLoad("glDeleteFramebuffers");
 
+        GenerateMipmap              = (PFN_OF(GLGENERATEMIPMAP))            GLoad("glGenerateMipmap");
         GenTextures                 = (PFN_OF(GLGENTEXTURES))               GLoad("glGenTextures");
         BindTexture                 = (PFN_OF(GLBINDTEXTURE))               GLoad("glBindTexture");
         TexImage2D                  = (PFN_OF(GLTEXIMAGE2D))                GLoad("glTexImage2D");
         TexParameteri               = (PFN_OF(GLTEXPARAMETERI))             GLoad("glTexParametri");
         DeleteTextures              = (PFN_OF(GLDELETETEXTURES))            GLoad("glDeleteTextures");
+        ActiveTexture               = (PFN_OF(GLACTIVETEXTURE))             GLoad("glActiveTexture");
 
         GenRenderBuffers            = (PFN_OF(GLGENRENDERBUFFERS))          GLoad("glGenRenderBuffers");
         BindRenderBuffer            = (PFN_OF(GLBINDRENDERBUFFER))          GLoad("glBindRenderBuffers");
@@ -140,6 +142,11 @@ namespace Pengine::GL {
         Uniform2f                   = (PFN_OF(GLUNIFORM2F))                 GLoad("glUniform2f");
         Uniform3f                   = (PFN_OF(GLUNIFORM3F))                 GLoad("glUniform3f");
         Uniform4f                   = (PFN_OF(GLUNIFORM4F))                 GLoad("glUniform4f");
+
+        Uniform1fv                  = (PFN_OF(GLUNIFORM1FV))                GLoad("glUniform1fv");
+        Uniform2fv                  = (PFN_OF(GLUNIFORM2FV))                GLoad("glUniform2fv");
+        Uniform3fv                  = (PFN_OF(GLUNIFORM3FV))                GLoad("glUniform3fv");
+        Uniform4fv                  = (PFN_OF(GLUNIFORM4FV))                GLoad("glUniform4fv");
 
         Uniform1i                   = (PFN_OF(GLUNIFORM1I))                 GLoad("glUniform1i");
         Uniform2i                   = (PFN_OF(GLUNIFORM2I))                 GLoad("glUniform2i");

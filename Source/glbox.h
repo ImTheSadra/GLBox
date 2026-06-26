@@ -1,6 +1,7 @@
 #pragma once
 #include "glbox_head.h"
 #include "uniforms.h"
+#include "textures.h"
 
 namespace Pengine::GL {
     typedef GLuint (APIENTRYP PFN_OF(GLCREATESHADER))(GLenum shaderType);
@@ -41,12 +42,6 @@ namespace Pengine::GL {
     typedef void (APIENTRYP PFN_OF(GLFRAMEBUFFERRENDERBUFFER))(GLenum target, GLenum attachment, GLenum renderTarget, GLuint renderbuffer);
     typedef GLenum (APIENTRYP PFN_OF(GLCHECKFRAMEBUFFERSTATUS))(GLenum target);
     typedef void (APIENTRYP PFN_OF(GLDELETEFRAMEBUFFERS))(GLsizei n, const GLuint* textures);
-
-    typedef void (APIENTRYP PFN_OF(GLGENTEXTURES))(GLsizei n, GLuint* textures);
-    typedef void (APIENTRYP PFN_OF(GLBINDTEXTURE))(GLenum target, GLuint texture);
-    typedef void (APIENTRYP PFN_OF(GLTEXIMAGE2D))(GLenum target, GLint leve, GLint inFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid* data);
-    typedef void (APIENTRYP PFN_OF(GLTEXPARAMETERI))(GLenum target, GLenum pname, GLfloat param);
-    typedef void (APIENTRYP PFN_OF(GLDELETETEXTURES))(GLsizei n, const GLuint* textures);
 
     typedef void (APIENTRYP PFN_OF(GLGENRENDERBUFFERS))(GLsizei n, GLuint* buffers);
     typedef void (APIENTRYP PFN_OF(GLBINDRENDERBUFFER))(GLenum target, GLuint buffer);
@@ -99,11 +94,7 @@ namespace Pengine::GL {
     extern PFN_OF(GLCHECKFRAMEBUFFERSTATUS) CheckFrameBufferStatus;
     extern PFN_OF(GLDELETEFRAMEBUFFERS) DeleteFrameBuffers;
 
-    extern PFN_OF(GLGENTEXTURES) GenTextures;
-    extern PFN_OF(GLBINDTEXTURE) BindTexture;
-    extern PFN_OF(GLTEXIMAGE2D) TexImage2D;
-    extern PFN_OF(GLTEXPARAMETERI) TexParameteri;
-    extern PFN_OF(GLDELETETEXTURES) DeleteTextures;
+    
 
     extern PFN_OF(GLGENRENDERBUFFERS) GenRenderBuffers;
     extern PFN_OF(GLBINDRENDERBUFFER) BindRenderBuffer;
