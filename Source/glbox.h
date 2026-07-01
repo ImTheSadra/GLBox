@@ -3,110 +3,105 @@
 #include "uniforms.h"
 #include "textures.h"
 
+#define GL_FUNCTIONS_LIST \
+    X(GLCREATESHADER, CreateShader, "glCreateShader") \
+    X(GLSHADERSOURCE, ShaderSource, "glShaderSource") \
+    X(GLCOMPILESHADER, CompileShader, "glCompileShader") \
+    X(GLGETSHADERIV, GetShaderiv, "glGetShaderiv") \
+    X(GLGETSHADERINFOLOG, GetShaderInfoLog, "glGetShaderInfoLog") \
+    X(GLDELETESHADER, DeleteShader, "glDeleteShader") \
+    X(GLCREATEPROGRAM, CreateProgram, "glCreateProgram") \
+    X(GLATTACHSHADER, AttachShader, "glAttachShader") \
+    X(GLLINKPROGRAM, LinkProgram, "glLinkProgram") \
+    X(GLGETPROGRAMIV, GetProgramiv, "glGetProgramiv") \
+    X(GLGETPROGRAMINFOLOG, GetProgramInfoLog, "glGetProgramInfoLog") \
+    X(GLDELETEPROGRAM, DeleteProgram, "glDeleteProgram") \
+    X(GLUSEPROGRAM, UseProgram, "glUseProgram") \
+    X(GLGENBUFFERS, GenBuffers, "glGenBuffers") \
+    X(GLDELETEBUFFERS, DeleteBuffers, "glDeleteBuffers") \
+    X(GLBINDBUFFER, BindBuffer, "glBindBuffer") \
+    X(GLBINDBUFFERBASE, BindBufferBase, "glBindBufferBase") \
+    X(GLBINDVERTEXARRAY, BindVertexArray, "glBindVertexArray") \
+    X(GLVERTEXATTRIBIPOINTER, VertexAttribIPointer, "glVertexAttribIPointer") \
+    X(GLVERTEXATTRIBLPOINTER, VertexAttribLPointer, "glVertexAttribLPointer") \
+    X(GLVERTEXATTRIBPOINTER, VertexAttribPointer, "glVertexAttribPointer") \
+    X(GLENABLEVERTEXATTRIBARRAY, EnableVertexAttribArray, "glEnableVertexAttribArray") \
+    X(GLDELETEVERTEXARRAYS, DeleteVertexArrays, "glDeleteVertexArrays") \
+    X(GLBUFFERDATA, BufferData, "glBufferData") \
+    X(GLNAMEDBUFFERDATA, NamedBufferData, "glNamedBufferData") \
+    X(GLGENVERTEXARRAYS, GenVertexArrays, "glGenVertexArrays") \
+    X(GLBUFFERSUBDATA, BufferSubData, "glBufferSubData") \
+    X(GLGENFRAMEBUFFERS, GenFrameBuffers, "glGenFramebuffers") \
+    X(GLBINDFRAMEBUFFER, BindFrameBuffer, "glBindFramebuffer") \
+    X(GLFRAMEBUFFERTEXTURE2D, FrameBufferTexture2D, "glFramebufferTexture2D") \
+    X(GLFRAMEBUFFERRENDERBUFFER, FrameBufferRenderBuffer, "glFramebufferRenderbuffer") \
+    X(GLCHECKFRAMEBUFFERSTATUS, CheckFrameBufferStatus, "glCheckFramebufferStatus") \
+    X(GLDELETEFRAMEBUFFERS, DeleteFrameBuffers, "glDeleteFramebuffers") \
+    X(GLGENRENDERBUFFERS, GenRenderBuffers, "glGenRenderBuffers") \
+    X(GLBINDRENDERBUFFER, BindRenderBuffer, "glBindRenderbuffer") \
+    X(GLRENDERBUFFERSTORAGE, RenderBufferStorage, "glRenderBufferStorage") \
+    X(GLDELETERENDERBUFFERS, DeleteRenderBuffers, "glDeleteRenderbuffers") \
+    X(GLGENERATEMIPMAP, GenerateMipmap, "glGenerateMipmap") \
+    X(GLACTIVETEXTURE, ActiveTexture, "glActiveTexture") \
+    X(GLGETUNIFORMBLOCKINDEX, GetUniformBlockIndex, "glGetUniformBlockIndex") \
+    X(GLGETACTIVEUNIFORMBLOCK, GetActiveUniformBlock, "glGetActiveUniformBlockiv") \
+    X(GLUNIFORMBLOCKBINDING, UniformBlockBinding, "glUniformBlockBinding") \
+    X(GLUNIFORM1FV, Uniform1fv, "glUniform1fv") \
+    X(GLUNIFORM2FV, Uniform2fv, "glUniform2fv") \
+    X(GLUNIFORM3FV, Uniform3fv, "glUniform3fv") \
+    X(GLUNIFORM4FV, Uniform4fv, "glUniform4fv") \
+    X(GLUNIFORMMATRIX2FV, UniformMatrix2fv, "glUniformMatrix2fv") \
+    X(GLUNIFORMMATRIX3FV, UniformMatrix3fv, "glUniformMatrix3fv") \
+    X(GLUNIFORMMATRIX4FV, UniformMatrix4fv, "glUniformMatrix4fv")
+
 namespace Pengine::GL {
-    typedef GLuint (APIENTRYP PFN_OF(GLCREATESHADER))(GLenum shaderType);
-    typedef void (APIENTRYP PFN_OF(GLSHADERSOURCE))(GLuint shader, GLsizei count, const GLchar* const* string, const GLint* length);
-    typedef void (APIENTRYP PFN_OF(GLCOMPILESHADER))(GLuint shader);
-    typedef void (APIENTRYP PFN_OF(GLGETSHADERIV))(GLuint shader, GLenum pname, GLint* params);
-    typedef void (APIENTRYP PFN_OF(GLGETSHADERINFOLOG))(GLuint shader, GLsizei bufSize, GLsizei* length, GLchar* infoLog);
-    typedef void (APIENTRYP PFN_OF(GLDELETESHADER))(GLuint shader);
-
-    typedef GLuint (APIENTRYP PFN_OF(GLCREATEPROGRAM))();
-    typedef void (APIENTRYP PFN_OF(GLATTACHSHADER))(GLuint program, GLuint shader);
-    typedef void (APIENTRYP PFN_OF(GLLINKPROGRAM))(GLuint program);
-    typedef void (APIENTRYP PFN_OF(GLGETPROGRAMIV))(GLuint program, GLenum pname, GLint* params);
-    typedef void (APIENTRYP PFN_OF(GLGETPROGRAMINFOLOG))(GLuint program, GLsizei bufSize, GLsizei* length, GLchar* infoLog);
-    typedef void (APIENTRYP PFN_OF(GLDELETEPROGRAM))(GLuint program);
-    typedef void (APIENTRYP PFN_OF(GLUSEPROGRAM))(GLuint program);
-
-    typedef GLuint (APIENTRYP PFN_OF(GLGENBUFFERS))(GLsizei n, GLuint* buffers);
-    typedef void (APIENTRYP PFN_OF(GLDELETEBUFFERS))(GLsizei size, const GLuint* arrays);
-    typedef void (APIENTRYP PFN_OF(GLBINDBUFFER))(GLenum target, GLuint buffer);
-    typedef void (APIENTRYP PFN_OF(GLBINDVERTEXARRAY))(GLuint array);
-    typedef void (APIENTRYP PFN_OF(GLBINDBUFFERBASE))(GLenum target, GLuint index, GLuint buffer);
-    typedef void (APIENTRYP PFN_OF(GLVERTEXATTRIBIPOINTER))(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);
-    typedef void (APIENTRYP PFN_OF(GLVERTEXATTRIBLPOINTER))(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);
-    typedef void (APIENTRYP PFN_OF(GLVERTEXATTRIBPOINTER))(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
-    typedef void (APIENTRYP PFN_OF(GLENABLEVERTEXATTRIBARRAY))(GLuint index);
-    typedef void (APIENTRYP PFN_OF(GLDELETEVERTEXARRAYS))(GLsizei size, const GLuint* arrays);
-    typedef void (APIENTRYP PFN_OF(GLBUFFERDATA))(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage);
-    typedef void (APIENTRYP PFN_OF(GLNAMEDBUFFERDATA))(GLuint buffer, GLsizei size, const void* data, GLenum usage);
-    typedef GLuint (APIENTRYP PFN_OF(GLGENVERTEXARRAYS))(GLsizei n, GLuint* arrays);
-    typedef void (APIENTRYP PFN_OF(GLBUFFERSUBDATA))(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid * data);
-    typedef void (APIENTRYP PFN_OF(GLDRAWARRAYS))(GLenum mode, GLint first, GLsizei count);
-    typedef void (APIENTRYP PFN_OF(GLDRAWELEMENTS))(GLenum mode, GLsizei count, GLenum type, const GLvoid * indices);
-
-    typedef void (APIENTRYP PFN_OF(GLGENFRAMEBUFFERS))(GLsizei n, GLuint* buffers);
-    typedef void (APIENTRYP PFN_OF(GLBINDFRAMEBUFFER))(GLenum target, GLuint buffer);
-    typedef void (APIENTRYP PFN_OF(GLFRAMEBUFFERTEXTURE2D))(GLenum target, GLenum attachment, GLenum textargt, GLuint texture, GLint level);
-    typedef void (APIENTRYP PFN_OF(GLFRAMEBUFFERRENDERBUFFER))(GLenum target, GLenum attachment, GLenum renderTarget, GLuint renderbuffer);
-    typedef GLenum (APIENTRYP PFN_OF(GLCHECKFRAMEBUFFERSTATUS))(GLenum target);
-    typedef void (APIENTRYP PFN_OF(GLDELETEFRAMEBUFFERS))(GLsizei n, const GLuint* textures);
-
-    typedef void (APIENTRYP PFN_OF(GLGENRENDERBUFFERS))(GLsizei n, GLuint* buffers);
-    typedef void (APIENTRYP PFN_OF(GLBINDRENDERBUFFER))(GLenum target, GLuint buffer);
-    typedef void (APIENTRYP PFN_OF(GLRENDERBUFFERSTORAGE))(GLenum target, GLenum inFormat, GLsizei width, GLsizei height);
-    typedef void (APIENTRYP PFN_OF(GLDELETERENDERBUFFERS))(GLsizei n, const GLuint* textures);
-
-    typedef void (APIENTRYP PFN_OF(GLGETINTEGERV))(GLenum what, GLuint* data);
-
-    #ifdef _WIN32
+#ifdef _WIN32
     typedef HGLRC (WINAPI * PFNWGLCREATECONTEXTATTRIBSARBPROC)(HDC, HGLRC, const int*);
-    #endif
-
-    extern PFN_OF(GLCREATESHADER) CreateShader;
-    extern PFN_OF(GLSHADERSOURCE) ShaderSource;
-    extern PFN_OF(GLCOMPILESHADER) CompileShader;
-    extern PFN_OF(GLGETSHADERIV) GetShaderiv;
-    extern PFN_OF(GLGETSHADERINFOLOG) GetShaderInfoLog;
-    extern PFN_OF(GLDELETESHADER) DeleteShader;
-    
-    extern PFN_OF(GLCREATEPROGRAM) CreateProgram;
-    extern PFN_OF(GLATTACHSHADER) AttachShader;
-    extern PFN_OF(GLLINKPROGRAM) LinkProgram;
-    extern PFN_OF(GLGETPROGRAMIV) GetProgramiv;
-    extern PFN_OF(GLGETPROGRAMINFOLOG) GetProgramInfoLog;
-    extern PFN_OF(GLDELETEPROGRAM) DeleteProgram;
-    extern PFN_OF(GLUSEPROGRAM) UseProgram;
-
-    extern PFN_OF(GLGENBUFFERS) GenBuffers;
-    extern PFN_OF(GLDELETEBUFFERS) DeleteBuffers;
-    extern PFN_OF(GLBINDBUFFER) BindBuffer;
-    extern PFN_OF(GLBINDBUFFERBASE) BindBufferBase;
-    extern PFN_OF(GLBINDVERTEXARRAY) BindVertexArray;
-    extern PFN_OF(GLVERTEXATTRIBIPOINTER) VertexAttribIPointer;
-    extern PFN_OF(GLVERTEXATTRIBLPOINTER) VertexAttribLPointer;
-    extern PFN_OF(GLVERTEXATTRIBPOINTER) VertexAttribPointer;
-    extern PFN_OF(GLENABLEVERTEXATTRIBARRAY) EnableVertexAttribArray;
-    extern PFN_OF(GLDELETEVERTEXARRAYS) DeleteVertexArrays;
-    extern PFN_OF(GLBUFFERDATA) BufferData;
-    extern PFN_OF(GLNAMEDBUFFERDATA) NamedBufferData;
-    extern PFN_OF(GLGENVERTEXARRAYS) GenVertexArrays;
-    extern PFN_OF(GLBUFFERSUBDATA) BufferSubData;
-
-    extern PFN_OF(GLDRAWARRAYS) DrawArrays;
-    extern PFN_OF(GLDRAWELEMENTS) DrawElements;
-
-    extern PFN_OF(GLGENFRAMEBUFFERS) GenFrameBuffers;
-    extern PFN_OF(GLBINDFRAMEBUFFER) BindFrameBuffer;
-    extern PFN_OF(GLFRAMEBUFFERTEXTURE2D) FrameBufferTexture2D;
-    extern PFN_OF(GLFRAMEBUFFERRENDERBUFFER) FrameBufferRenderBuffer;
-    extern PFN_OF(GLCHECKFRAMEBUFFERSTATUS) CheckFrameBufferStatus;
-    extern PFN_OF(GLDELETEFRAMEBUFFERS) DeleteFrameBuffers;
-
-    
-
-    extern PFN_OF(GLGENRENDERBUFFERS) GenRenderBuffers;
-    extern PFN_OF(GLBINDRENDERBUFFER) BindRenderBuffer;
-    extern PFN_OF(GLRENDERBUFFERSTORAGE) RenderBufferStorage;
-    extern PFN_OF(GLDELETERENDERBUFFERS) DeleteRenderBuffers;
-
-    extern PFN_OF(GLGETINTEGERV) GetIntegerv;
-    extern bool loaded;
-
-    #ifdef _WIN32
     extern PFNWGLCREATECONTEXTATTRIBSARBPROC CreateContextAttribsARB;
-    #endif
-    
+#endif
+
+    using PFNGLDRAWARRAYSPROC = void (APIENTRY *)(GLenum mode, GLint first, GLsizei count);
+    using PFNGLDRAWELEMENTSPROC = void (APIENTRY *)(GLenum mode, GLsizei count, GLenum type, const void *indices);
+    using PFNGLGENTEXTURESPROC = void (APIENTRY *)(GLsizei n, GLuint *textures);
+    using PFNGLBINDTEXTUREPROC = void (APIENTRY *)(GLenum target, GLuint texture);
+    using PFNGLTEXIMAGE2DPROC = void (APIENTRY *)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels);
+    using PFNGLTEXPARAMETERIPROC = void (APIENTRY *)(GLenum target, GLenum pname, GLint param);
+    using PFNGLDELETETEXTURESPROC = void (APIENTRY *)(GLsizei n, const GLuint *textures);
+    using PFNGLGETUNIFORMLOCATIONPROC = GLint (APIENTRY *)(GLuint program, const GLchar *name);
+    using PFNGLUNIFORM1FPROC = void (APIENTRY *)(GLint location, GLfloat v0);
+    using PFNGLUNIFORM2FPROC = void (APIENTRY *)(GLint location, GLfloat v0, GLfloat v1);
+    using PFNGLUNIFORM3FPROC = void (APIENTRY *)(GLint location, GLfloat v0, GLfloat v1, GLfloat v2);
+    using PFNGLUNIFORM4FPROC = void (APIENTRY *)(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
+    using PFNGLUNIFORM1IPROC = void (APIENTRY *)(GLint location, GLint v0);
+    using PFNGLUNIFORM2IPROC = void (APIENTRY *)(GLint location, GLint v0, GLint v1);
+    using PFNGLUNIFORM3IPROC = void (APIENTRY *)(GLint location, GLint v0, GLint v1, GLint v2);
+    using PFNGLUNIFORM4IPROC = void (APIENTRY *)(GLint location, GLint v0, GLint v1, GLint v2, GLint v3);
+    using PFNGLGETINTEGERVPROC = void (APIENTRY *)(GLenum pname, GLint *data);
+
+#define GL_CORE_FUNCTIONS_LIST \
+    X(GLDRAWARRAYS, DrawArrays, "glDrawArrays") \
+    X(GLDRAWELEMENTS, DrawElements, "glDrawElements") \
+    X(GLGENTEXTURES, GenTextures, "glGenTextures") \
+    X(GLBINDTEXTURE, BindTexture, "glBindTexture") \
+    X(GLTEXIMAGE2D, TexImage2D, "glTexImage2D") \
+    X(GLTEXPARAMETERI, TexParameteri, "glTexParametri") \
+    X(GLDELETETEXTURES, DeleteTextures, "glDeleteTextures") \
+    X(GLGETUNIFORMLOCATION, GetUniformLocation, "glGetUniformLocation") \
+    X(GLUNIFORM1F, Uniform1f, "glUniform1f") \
+    X(GLUNIFORM2F, Uniform2f, "glUniform2f") \
+    X(GLUNIFORM3F, Uniform3f, "glUniform3f") \
+    X(GLUNIFORM4F, Uniform4f, "glUniform4f") \
+    X(GLUNIFORM1I, Uniform1i, "glUniform1i") \
+    X(GLUNIFORM2I, Uniform2i, "glUniform2i") \
+    X(GLUNIFORM3I, Uniform3i, "glUniform3i") \
+    X(GLUNIFORM4I, Uniform4i, "glUniform4i") \
+    X(GLGETINTEGERV, GetIntegerv, "glGetIntegerv")
+
+#define X(type, name, str) extern PFN_OF(type) name;
+    GL_FUNCTIONS_LIST
+    GL_CORE_FUNCTIONS_LIST
+#undef X
+
+    extern bool loaded;
     void LoadExtensions();
 }

@@ -2,26 +2,30 @@
 #ifndef GLX_GLXEXT_PROTOTYPES
 #define GLX_GLXEXT_PROTOTYPES
 #endif
-#include <GL/gl.h>
-
-#ifdef _X11
-#include <GL/glx.h>
-#endif
 
 #ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <windows.h>
 #include <tchar.h>
-#include <GL/wglext.h>
+#include <GL/gl.h>
 #include <GL/glext.h>
+#include <GL/wglext.h>
+#elif defined(__APPLE__)
+#include <OpenGL/gl3.h>
+#include <OpenGL/gl3ext.h>
+#include <dlfcn.h>
+#else
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <GL/glx.h>
+#include <dlfcn.h>
 #endif
 
 namespace Pengine::GL {
 
-    #ifdef _WIN32
     #define PFN_OF(x) PFN##x##PROC
-    #else
-    #define PFN_OF(x) PFN##x
-    #endif
 
     #ifndef APIENTRYP
     #define APIENTRYP APIENTRY *
@@ -30,10 +34,32 @@ namespace Pengine::GL {
     #ifndef GLchar
     typedef char GLchar;
     #endif
-}
 
+    inline void* GLoad(const char* name) {
 #ifdef _WIN32
-#define GLoad(name) wglGetProcAddress(name) 
+        void* p = (void*)wglGetProcAddress(name);
+        if (p == nullptr || (p == (void*)0x1) || (p == (void*)0x2) || (p == (void*)0x3) || (p == (void*)-1)) {
+            static HMODULE module = GetModuleHandleA("opengl32.dll");
+            p = (void*)GetProcAddress(module, name);
+        }
+        return p;
+#elif defined(__APPLE__)
+        static void* image = nullptr;
+        if (image == nullptr) {
+            image = dlopen("/System/Library/Frameworks/OpenGL.framework/Versions/Current/OpenGL", RTLD_LAZY | RTLD_GLOBAL);
+        }
+        return image ? dlsym(image, name) : nullptr;
 #else
-#define GLoad(name) glXGetProcAddress((const GLubyte*)name)
+        void* p = (void*)glXGetProcAddress((const GLubyte*)name);
+        if (p == nullptr) {
+            static void* libGL = nullptr;
+            if (libGL == nullptr) {
+                libGL = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
+                if (libGL == nullptr) libGL = dlopen("libGL.so", RTLD_LAZY | RTLD_GLOBAL);
+            }
+            if (libGL) p = dlsym(libGL, name);
+        }
+        return p;
 #endif
+    }
+}
